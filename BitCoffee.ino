@@ -18,6 +18,14 @@ void setup()
 	nfc.setLastTransactionId(20000000);
 
 	nfc.init();
+
+	Serial.print("log: ID: ");
+	Serial.print(nfc.getId());
+	Serial.print(", Secret: ");
+	Serial.print(nfc.getSecretKey());
+	Serial.print(", Last Transaction: ");
+	Serial.print(nfc.getLastTransactionId());
+	Serial.println(";");
 }
 
 // The loop function is called in an endless loop

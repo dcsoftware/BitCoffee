@@ -76,8 +76,6 @@
 #define SERIAL_RESPONSE_OK "ok;"
 #define SERIAL_RESPONSE_ERROR "err;"
 #define SERIAL_VALUE_REQUEST "req;"
-#define SERIAL_COMMAND_START "<"
-#define SERIAL_COMMAND_END ">"
 
 
 #define NDEF_MAX_LENGTH 128  // altough ndef can handle up to 0xfffe in size, arduino cannot.

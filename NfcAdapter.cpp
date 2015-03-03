@@ -628,11 +628,11 @@ void MyCard::setResponse(responseCommand cmd, uint8_t* buf, uint8_t* sendlen, ui
         case PRIV_APPLICATION_SELECTED:
             buf[0] = R_SW1_PRIV_APP_SELECTED;
             buf[1] = R_SW2_PRIV_APP_SELECTED;
-//            memcpy(buf+2, cardId, 9);
+            memcpy(buf+2, cardId, 9);
 //            memcpy(buf + 2 + 8, ",", 2);
 //            memcpy(buf + 2 + 8 + 1, secretKey, 11);
 //            *sendlen = 2 + sizeof(cardId) + sizeof(secretKey)- 1;
-            *sendlen = 2;
+            *sendlen = 2 + sizeof(cardId);
         	break;
         case STATUS_WAITING:
             buf[0] = R_SW1_STATUS_WAITING;
