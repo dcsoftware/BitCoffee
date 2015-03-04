@@ -2,6 +2,8 @@
 #include "NfcAdapter.h"
 #include <MNdefMessage.h>
 
+#define LEO_READY "ready"
+
 
 PN532_SPI pn532spi(SPI, 10);
 MyCard nfc(pn532spi);
@@ -10,12 +12,33 @@ MyCard nfc(pn532spi);
 void setup()
 {
 // Add your initialization code here
-	Serial.begin(115200);
-	delay(1000);
+	Serial.begin(9600);
+	Serial1.begin(9600);
 
-	nfc.setId("00005678");
-	nfc.setSecretKey("ABCDEFGHIJ");
-	nfc.setLastTransactionId(20000000);
+	Serial.println("log: waiting leo initializzation;");
+
+	while(!Serial1.available());
+
+	char serial1Buff[64];
+
+	Serial1.readBytesUntil(10, serial1Buff, sizeof(serial1Buff));
+	if(0 == memcmp(serial1Buff, LEO_READY, 5)) {
+		Serial1.println("request");
+		while(!Serial1.available()) ;
+		Serial1.readBytesUntil(10, serial1Buff, sizeof(serial1Buff));
+		String s = serial1Buff;
+		nfc.setId(s.substring(0, 8));
+		nfc.setSecretKey(s.substring(9, 19));
+		String last = s.substring(20, 29);
+		char c[9];
+		last.toCharArray(c, sizeof(c));
+		c[sizeof(c) - 1] = 0;
+		nfc.setLastTransactionId(atol(c));
+
+	}
+//	nfc.setId("00005678");
+//	nfc.setSecretKey("ABCDEFGHIJ");
+//	nfc.setLastTransactionId(20000000);
 
 	nfc.init();
 
