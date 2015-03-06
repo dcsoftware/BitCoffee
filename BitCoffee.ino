@@ -13,6 +13,7 @@ void setup()
 {
 // Add your initialization code here
 	Serial.begin(9600);
+	while(!Serial);
 	Serial1.begin(9600);
 
 	Serial.println("log: waiting leo initializzation;");

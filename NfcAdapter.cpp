@@ -160,6 +160,21 @@ boolean readCommand2() {
 			String(transactionId).toCharArray(transIdBuf, sizeof(transIdBuf));
 			memcpy(values, serialBuffer + 4, 20);
 			memcpy(values + 19, transIdBuf, 9);
+			char time[11];
+			char amount[6];
+			memcpy(amount, values, 5);
+			memcpy(time, values + 6, 10);
+			Serial1.print("store {\"timestamp\":\"");
+			Serial1.print(time);
+			Serial1.print("\",\"event_type\":\"recharge\",\"transaction_id\":\"");
+			Serial1.print(String(transactionId));
+			Serial1.print("\",\"machine_id\":\"");
+			Serial1.print(cardId);
+			Serial1.print("\",\"user_id\":\"");
+			Serial1.print(userId);
+			Serial1.print("\",\"amount\":\"+");
+			Serial1.print(amount);
+			Serial1.print("\"}");
 			Serial.print("log: recharge ");
 			Serial.print(values);
 			Serial.println(";");
@@ -170,6 +185,21 @@ boolean readCommand2() {
 			String(transactionId).toCharArray(transIdBuf, sizeof(transIdBuf));
 			memcpy(values, serialBuffer + 4, 20);
 			memcpy(values + 19, transIdBuf, 9);
+			char time[11];
+			char amount[6];
+			memcpy(amount, values, 5);
+			memcpy(time, values + 6, 10);
+			Serial1.print("store {\"timestamp\":\"");
+			Serial1.print(time);
+			Serial1.print("\",\"event_type\":\"purchase\",\"transaction_id\":\"");
+			Serial1.print(String(transactionId));
+			Serial1.print("\",\"machine_id\":\"");
+			Serial1.print(cardId);
+			Serial1.print("\",\"user_id\":\"");
+			Serial1.print(userId);
+			Serial1.print("\",\"amount\":\"-");
+			Serial1.print(amount);
+			Serial1.print("\"}");
 			Serial.print("log: purchase ");
 			Serial.print(values);
 			Serial.println(";");
@@ -509,18 +539,21 @@ bool MyCard::emulate(const uint16_t tgInitAsTargetTimeout){
                     Serial.print(userCredit);
                     Serial.println(";");
                     delay(100);
-
                     while (!readCommand()) {
                         delay(10);
                     }
 
-                    Serial.print("log: control key=");
-                    Serial.print(controlKeyReceived);
-                    Serial.println(";");
                     cardState = WAITING;
                     setResponse(COMMAND_COMPLETE, rwbuf, &sendlen);
                     if(!loggedin) {
                         //eventType = LOGIN;
+            			Serial1.print("store {\"timestamp\":\"");
+            			Serial1.print(String(epoch));
+            			Serial1.print("\",\"event_type\":\"log_in\",\"machine_id\":\"");
+            			Serial1.print(cardId);
+            			Serial1.print("\",\"user_id\":\"");
+            			Serial1.print(userId);
+            			Serial1.print("\"}");
                     	Serial.println("log: login;");
                         //sendRequest(LOGIN);
                         loggedin = true;
@@ -548,8 +581,6 @@ bool MyCard::emulate(const uint16_t tgInitAsTargetTimeout){
                             Serial.print(transactionId);
                             Serial.println(";");
                             setResponse(STATUS_RECHARGED, rwbuf, &sendlen);
-                            //sendRequest(RECHARGE_TRANSACTION);
-                            //eventType = RECHARGE_TRANSACTION;
                             break;
                         case PURCHASE:
                             cardState = WAITING;
@@ -558,8 +589,6 @@ bool MyCard::emulate(const uint16_t tgInitAsTargetTimeout){
                             Serial.print(transactionId);
                             Serial.println(";");
                             setResponse(STATUS_PURCHASE, rwbuf, &sendlen);
-                            //sendRequest(PURCHASE_TRANSACTION);
-                            //eventType = PURCHASE_TRANSACTION;
                             break;
                     }
                     delay(50);
