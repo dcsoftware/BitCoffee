@@ -29,8 +29,8 @@ void setup()
 		Serial1.readBytesUntil(10, serial1Buff, sizeof(serial1Buff));
 		String s = serial1Buff;
 		nfc.setId(s.substring(0, 8));
-		nfc.setSecretKey(s.substring(9, 19));
-		String last = s.substring(20, 29);
+		nfc.setSecretKey(s.substring(9, 29));
+		String last = s.substring(30, 39);
 		char c[9];
 		last.toCharArray(c, sizeof(c));
 		c[sizeof(c) - 1] = 0;

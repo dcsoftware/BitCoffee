@@ -1,2 +1,2 @@
-spec.o: \
- /Users/davide/Documents/eclipse-arduino/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/spec.C
+spec.o:  \
+ C:/Users/Davide/Desktop/eclipseArduino/workspace/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/spec.C
