@@ -15,11 +15,10 @@ void setup()
 	Serial.begin(9600);
 	while(!Serial);
 	Serial1.begin(9600);
-
+	delay(1000);
 	Serial.println("log: waiting leo initializzation;");
 
 	while(!Serial1.available());
-
 	char serial1Buff[64];
 
 	Serial1.readBytesUntil(10, serial1Buff, sizeof(serial1Buff));
@@ -51,6 +50,8 @@ void setup()
 	Serial.print(nfc.getLastTransactionId());
 	Serial.println(";");
 }
+
+void(* resetFunc) (void) = 0;//declare reset function at address 0
 
 // The loop function is called in an endless loop
 void loop()
