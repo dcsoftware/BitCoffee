@@ -34,7 +34,7 @@ char amountBuf[6];
 char timestampBuf[19];
 uint8_t secretKey[] = "ABCDEFGHIJ"; //{0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a};
 uint8_t controlKey[] = "";
-uint8_t secret[11];
+uint8_t secret[21];
 uint8_t ndefBuf[120];
 int messageSize;
 NdefMessage message;
@@ -283,7 +283,8 @@ boolean readCommand() {
 
 bool MyCard::init(){
 	message = NdefMessage();
-	message.addMimeMediaRecord("application/coffeeap","a");
+
+	message.addApplicationRecord("android.com:pkg","it.blqlabs.android.coffeeapp2");
 	messageSize = message.getEncodedSize();
     if (messageSize > sizeof(ndefBuf)) {
     	Serial.println("log:Ndef message to big;");
@@ -302,7 +303,7 @@ bool MyCard::init(){
 void MyCard::setSecretKey(String key) {
 	//key.toCharArray(secret, sizeof(secret));
 	key.getBytes(secret, sizeof(secret));
-	totp = TOTP(secret, 10);
+	totp = TOTP(secret, 20);
 }
 
 String MyCard::getSecretKey() {
@@ -603,7 +604,9 @@ bool MyCard::emulate(const uint16_t tgInitAsTargetTimeout){
                 if(retries > 3) {
                 	runLoop = false;
                 }
-                Serial.print("log:command not supported;");
+                Serial.print("log:command not supported = ");
+                Serial.print(rwbuf[C_APDU_INS]);
+                Serial.println(";");
                 setResponse(FUNCTION_NOT_SUPPORTED, rwbuf, &sendlen);
                 break;
         }
